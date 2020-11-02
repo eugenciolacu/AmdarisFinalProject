@@ -4,4 +4,8 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\AmdarisInternship.Infrastructure\AmdarisInternship.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
