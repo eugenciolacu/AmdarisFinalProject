@@ -8,7 +8,9 @@ namespace AmdarisInternship.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<UserRole> builder)
         {
-            
+            builder.
+                HasIndex(ur => new { ur.RoleId, ur.UserId })
+                .IsUnique();
         }
     }
 }

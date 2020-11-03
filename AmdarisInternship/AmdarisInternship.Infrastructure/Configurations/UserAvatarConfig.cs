@@ -8,7 +8,22 @@ namespace AmdarisInternship.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<UserAvatar> builder)
         {
-            
+            builder.Property(ua => ua.AvatarExtension)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(ua => ua.AvatarName)
+                .IsRequired()
+                .HasMaxLength(256);
+
+            builder.Property(ua => ua.Avatar)
+                .IsRequired();
+
+            builder
+                .HasOne(ua => ua.User)
+                .WithOne(u => u.UserAvatar)
+                .HasForeignKey<UserAvatar>(ua => ua.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

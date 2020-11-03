@@ -8,7 +8,9 @@ namespace AmdarisInternship.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<ExamGradeComponent> builder)
         {
-            
+            builder.Property(eg => eg.Name)
+                .IsRequired()
+                .HasMaxLength(100);
         }
     }
 }

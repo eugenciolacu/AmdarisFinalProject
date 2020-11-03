@@ -7,5 +7,16 @@ namespace AmdarisInternship.Domain.Entities
     public class Promotion
     {
         public int Id { get; set; }
+
+        public DateTime StartDate { get; set; }
+
+        public DateTime EndDate { get; set; }
+
+        public string Name { get; set; }
+
+
+        public List<Lesson> Lessons { get; set; }
+
+        public List<UserPromotion> UserPromotions { get; set; }
     }
 }

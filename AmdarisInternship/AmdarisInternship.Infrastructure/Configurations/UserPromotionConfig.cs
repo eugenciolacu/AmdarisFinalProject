@@ -8,7 +8,9 @@ namespace AmdarisInternship.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<UserPromotion> builder)
         {
-            
+            builder.
+                HasIndex(up => new { up.UserId, up.PromotionId })
+                .IsUnique();
         }
     }
 }

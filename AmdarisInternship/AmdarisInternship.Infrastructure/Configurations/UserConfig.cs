@@ -11,7 +11,17 @@ namespace AmdarisInternship.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
-            
+            builder.Property(u => u.FirstName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder.Property(u => u.LastName)
+                .IsRequired()
+                .HasMaxLength(100);
+
+            builder
+                .HasCheckConstraint("CK_User_FirstName", "FirstName != ''")
+                .HasCheckConstraint("CK_User_LastName", "LastName != ''");
         }
     }
 }
