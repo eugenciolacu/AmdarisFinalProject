@@ -6,8 +6,8 @@ namespace AmdarisInternship.Infrastructure.Context
 {
     public class AmdarisInternshipContext : DbContext
     {
-        private const string _connectionString = @"Data Source=MDDSK40019\SQLEXPRESS;Initial Catalog=InternshipProject;Integrated Security=True";
-
+        //private const string _connectionString = @"Data Source=MDDSK40019\SQLEXPRESS;Initial Catalog=InternshipProject;Integrated Security=True";
+        private const string _connectionString = @"Data Source=MEDION-PC;Initial Catalog=InternshipProject;Integrated Security=True";
 
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Exam> Exams { get; set; }
