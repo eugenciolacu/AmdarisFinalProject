@@ -6,9 +6,6 @@ namespace AmdarisInternship.Infrastructure.Context
 {
     public class AmdarisInternshipContext : DbContext
     {
-        private const string _connectionString = @"Data Source=MDDSK40019\SQLEXPRESS;Initial Catalog=InternshipProject;Integrated Security=True";
-        //private const string _connectionString = @"Data Source=MEDION-PC;Initial Catalog=InternshipProject;Integrated Security=True";
-
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Exam> Exams { get; set; }
         public DbSet<ExamGradeComponent> ExamGradeComponents { get; set; }
@@ -26,16 +23,15 @@ namespace AmdarisInternship.Infrastructure.Context
         public DbSet<UserSkype> UserSkypes { get; set; }
 
 
-        public AmdarisInternshipContext()
+        public AmdarisInternshipContext(DbContextOptions options) : base(options)
         {
-            Database.EnsureDeleted();
-            Database.EnsureCreated();
+            
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSqlServer(_connectionString);
-        }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+            
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

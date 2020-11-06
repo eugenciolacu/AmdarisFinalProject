@@ -14,8 +14,6 @@ namespace AmdarisInternship
     {
         public static void Main(string[] args)
         {
-            AmdarisInternshipContext appContext = new AmdarisInternshipContext();
-
             CreateHostBuilder(args).Build().Run();
         }
 
