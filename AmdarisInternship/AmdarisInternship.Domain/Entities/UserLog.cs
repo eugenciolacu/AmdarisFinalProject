@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class UserLog
+    public class UserLog : BaseEntity
     {
-        public int Id { get; set; }
-
         public Nullable<int> OldUserRoleId { get; set; }
 
         public int NewUserRoleId { get; set; }

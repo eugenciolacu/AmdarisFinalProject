@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class UserAvatar
+    public class UserAvatar : BaseEntity
     {
-        public int Id { get; set; }
-
         public string AvatarExtension { get; set; }
 
         public string AvatarName { get; set; }

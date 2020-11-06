@@ -2,10 +2,8 @@
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class Role
+    public class Role : BaseEntity
     {
-        public int Id { get; set; }
-        
         public Enums.Role Role_ { get; set; }
 
 

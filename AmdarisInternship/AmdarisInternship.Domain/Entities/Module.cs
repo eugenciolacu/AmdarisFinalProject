@@ -5,10 +5,8 @@ using System.Text;
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class Module
+    public class Module : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
 

@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class Promotion
+    public class Promotion : BaseEntity
     {
-        public int Id { get; set; }
-
         public DateTime StartDate { get; set; }
 
         public DateTime EndDate { get; set; }

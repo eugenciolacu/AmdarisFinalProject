@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class UserPromotion
+    public class UserPromotion : BaseEntity
     {
-        public int Id { get; set; }
-
         public int UserId { get; set; }
 
         public int PromotionId { get; set; }

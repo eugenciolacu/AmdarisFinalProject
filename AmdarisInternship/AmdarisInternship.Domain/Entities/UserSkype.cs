@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class UserSkype
+    public class UserSkype : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Skype { get; set; }
 
         public int UserId { get; set; }

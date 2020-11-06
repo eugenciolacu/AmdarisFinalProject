@@ -4,10 +4,8 @@ using System.Text;
 
 namespace AmdarisInternship.Domain.Entities
 {
-    public class ExamGradeComponent
+    public class ExamGradeComponent : BaseEntity
     {
-        public int Id { get; set; }
-
         public string Name { get; set; }
 
         public float Weight { get; set; }
