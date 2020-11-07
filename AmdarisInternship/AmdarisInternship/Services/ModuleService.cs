@@ -67,7 +67,7 @@ namespace AmdarisInternship.API.Services
             return modules.ToList();
         }
 
-        public void RemoveModuleById(int id)
+        public bool RemoveModuleById(int id)
         {
             Module module = _moduleRepository.Find(id);
 
@@ -75,10 +75,11 @@ namespace AmdarisInternship.API.Services
             {
                 _moduleRepository.Delete(module);
                 _moduleRepository.Save();
+                return true;
             }
             else
             {
-                throw new NotFoundException("Module not found");
+                return false;
             }
         }
 

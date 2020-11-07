@@ -17,6 +17,6 @@ namespace AmdarisInternship.API.Services
 
         Module UpdateModule(int id, CreateModuleDto dto);
 
-        void RemoveModuleById(int id);
+        bool RemoveModuleById(int id);
     }
 }
