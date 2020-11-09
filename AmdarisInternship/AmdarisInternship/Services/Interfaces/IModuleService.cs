@@ -2,12 +2,13 @@
 using AmdarisInternship.API.Models;
 using AmdarisInternship.Domain.Entities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace AmdarisInternship.API.Services
 {
     public interface IModuleService
     {
-        IList<Module> GetModules(FilterOptions filterOptions);
+        IQueryable<Module> GetModules(FilterOptions filterOptions);
 
         Module GetModuleById(int id);
 

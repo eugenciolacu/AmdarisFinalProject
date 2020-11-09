@@ -26,7 +26,7 @@ namespace AmdarisInternship.API.Controllers
         [HttpGet]
         public IActionResult Get([FromQuery] FilterOptions filterOptions)
         {
-            IList<Module> modules = _moduleService.GetModules(filterOptions);
+            IQueryable<Module> modules = _moduleService.GetModules(filterOptions);
             IEnumerable<ModuleDto> result = modules.Select(m => _mapper.Map<ModuleDto>(m));
 
             return Ok(result);

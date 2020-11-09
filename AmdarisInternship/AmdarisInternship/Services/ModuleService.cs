@@ -4,7 +4,6 @@ using AmdarisInternship.API.Models;
 using AmdarisInternship.Domain.Entities;
 using AmdarisInternship.Infrastructure.Repositories;
 using Microsoft.Data.SqlClient;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AmdarisInternship.API.Services
@@ -41,7 +40,7 @@ namespace AmdarisInternship.API.Services
             return _moduleRepository.Find(id);
         }
 
-        public IList<Module> GetModules(FilterOptions filterOptions)
+        public IQueryable<Module> GetModules(FilterOptions filterOptions)
         {
             IQueryable<Module> modules;
 
@@ -64,7 +63,7 @@ namespace AmdarisInternship.API.Services
                     break;
             }
 
-            return modules.ToList();
+            return modules;
         }
 
         public bool RemoveModuleById(int id)
