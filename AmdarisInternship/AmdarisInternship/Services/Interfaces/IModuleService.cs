@@ -1,7 +1,6 @@
 ﻿using AmdarisInternship.API.Dtos;
 using AmdarisInternship.API.Models;
 using AmdarisInternship.Domain.Entities;
-using System.Collections.Generic;
 using System.Linq;
 
 namespace AmdarisInternship.API.Services
