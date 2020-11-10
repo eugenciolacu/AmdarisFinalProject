@@ -12,7 +12,7 @@ namespace AmdarisInternship.API.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ModuleController : ControllerBase // Controller
+    public class ModuleController : Controller // ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IModuleService _moduleService;
@@ -24,6 +24,7 @@ namespace AmdarisInternship.API.Controllers
         }
 
         [HttpGet]
+        [ApiExceptionFilter]
         public IActionResult Get([FromQuery] FilterOptions filterOptions)
         {
             IList<Module> modules = _moduleService.GetModules(filterOptions);
