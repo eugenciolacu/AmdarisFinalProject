@@ -8,6 +8,14 @@ namespace AmdarisInternship.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<Attachment> builder)
         {
+            builder.Property(a => a.AttachmentExtension)
+                .IsRequired()
+                .HasMaxLength(50);
+
+            builder.Property(a => a.AttachmentName)
+                .IsRequired()
+                .HasMaxLength(256);
+
             builder.Property(a => a.Attachment_)
                 .IsRequired();
         }

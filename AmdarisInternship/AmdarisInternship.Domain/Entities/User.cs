@@ -33,8 +33,6 @@ namespace AmdarisInternship.Domain.Entities
 
         public List<UserPromotion> UserPromotions { get; set; }
 
-        public List<UserLog> UserLogs { get; set; }
-
         public List<Lesson> Lessons { get; set; }
     }
 }

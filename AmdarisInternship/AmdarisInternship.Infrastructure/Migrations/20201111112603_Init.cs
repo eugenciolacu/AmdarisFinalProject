@@ -71,6 +71,53 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ModuleGradings",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(nullable: true),
+                    Weight = table.Column<float>(nullable: false),
+                    ModuleId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ModuleGradings", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ModuleGradings_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PromotionModules",
+                columns: table => new
+                {
+                    Id = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ModuleId = table.Column<int>(nullable: false),
+                    PromotionId = table.Column<int>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PromotionModules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_PromotionModules_Modules_ModuleId",
+                        column: x => x.ModuleId,
+                        principalTable: "Modules",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PromotionModules_Promotions_PromotionId",
+                        column: x => x.PromotionId,
+                        principalTable: "Promotions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Exams",
                 columns: table => new
                 {
@@ -181,28 +228,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserLogs",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    OldUserRoleId = table.Column<int>(nullable: true),
-                    NewUserRoleId = table.Column<int>(nullable: false),
-                    UpdateTime = table.Column<DateTime>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserLogs", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserLogs_Users_UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserPromotions",
                 columns: table => new
                 {
@@ -281,8 +306,7 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(maxLength: 100, nullable: false),
-                    Weight = table.Column<float>(nullable: false),
+                    ModuleGradingId = table.Column<int>(nullable: false),
                     Grade = table.Column<float>(nullable: false),
                     ExamId = table.Column<int>(nullable: false)
                 },
@@ -295,6 +319,12 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         principalTable: "Exams",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ExamGradeComponents_ModuleGradings_ModuleGradingId",
+                        column: x => x.ModuleGradingId,
+                        principalTable: "ModuleGradings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -303,6 +333,8 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    AttachmentExtension = table.Column<string>(maxLength: 50, nullable: false),
+                    AttachmentName = table.Column<string>(maxLength: 256, nullable: false),
                     Attachment_ = table.Column<byte[]>(nullable: false),
                     LessonId = table.Column<int>(nullable: false)
                 },
@@ -355,6 +387,11 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 column: "ExamId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ExamGradeComponents_ModuleGradingId",
+                table: "ExamGradeComponents",
+                column: "ModuleGradingId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Exams_ModuleId",
                 table: "Exams",
                 column: "ModuleId");
@@ -390,10 +427,25 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 column: "PromotionId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ModuleGradings_ModuleId",
+                table: "ModuleGradings",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Modules_Name",
                 table: "Modules",
                 column: "Name",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PromotionModules_ModuleId",
+                table: "PromotionModules",
+                column: "ModuleId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PromotionModules_PromotionId",
+                table: "PromotionModules",
+                column: "PromotionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_Role_",
@@ -418,11 +470,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 table: "UserEmails",
                 column: "UserId",
                 unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserLogs_UserId",
-                table: "UserLogs",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserPromotions_PromotionId",
@@ -471,13 +518,13 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 name: "Grades");
 
             migrationBuilder.DropTable(
+                name: "PromotionModules");
+
+            migrationBuilder.DropTable(
                 name: "UserAvatars");
 
             migrationBuilder.DropTable(
                 name: "UserEmails");
-
-            migrationBuilder.DropTable(
-                name: "UserLogs");
 
             migrationBuilder.DropTable(
                 name: "UserPromotions");
@@ -490,6 +537,9 @@ namespace AmdarisInternship.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Exams");
+
+            migrationBuilder.DropTable(
+                name: "ModuleGradings");
 
             migrationBuilder.DropTable(
                 name: "Lessons");

@@ -1,12 +1,12 @@
 ﻿namespace AmdarisInternship.Domain.Entities
 {
-    public class UserPromotion : BaseEntity
+    public class PromotionModule : BaseEntity
     {
-        public int UserId { get; set; }
+        public int ModuleId { get; set; }
 
         public int PromotionId { get; set; }
 
-        public User User { get; set; }
+        public Module Module { get; set; }
 
         public Promotion Promotion { get; set; }
     }

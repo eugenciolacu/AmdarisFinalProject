@@ -8,9 +8,11 @@ namespace AmdarisInternship.Infrastructure.Configurations
     {
         public void Configure(EntityTypeBuilder<ExamGradeComponent> builder)
         {
-            builder.Property(eg => eg.Name)
-                .IsRequired()
-                .HasMaxLength(100);
+            builder
+                .HasOne(egc => egc.ModuleGrading)
+                .WithMany(mg => mg.ExamGradeComponents)
+                .HasForeignKey(egc => egc.ModuleGradingId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

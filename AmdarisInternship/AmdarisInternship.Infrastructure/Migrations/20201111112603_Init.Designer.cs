@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AmdarisInternship.Infrastructure.Migrations
 {
     [DbContext(typeof(AmdarisInternshipContext))]
-    [Migration("20201106085200_Init")]
+    [Migration("20201111112603_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,6 +27,16 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("AttachmentExtension")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<string>("AttachmentName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(256)")
+                        .HasMaxLength(256);
 
                     b.Property<byte[]>("Attachment_")
                         .IsRequired()
@@ -82,17 +92,14 @@ namespace AmdarisInternship.Infrastructure.Migrations
                     b.Property<float>("Grade")
                         .HasColumnType("real");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(100)")
-                        .HasMaxLength(100);
-
-                    b.Property<float>("Weight")
-                        .HasColumnType("real");
+                    b.Property<int>("ModuleGradingId")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ExamId");
+
+                    b.HasIndex("ModuleGradingId");
 
                     b.ToTable("ExamGradeComponents");
                 });
@@ -189,6 +196,29 @@ namespace AmdarisInternship.Infrastructure.Migrations
                     b.HasCheckConstraint("CK_Module_Name", "Name != ''");
                 });
 
+            modelBuilder.Entity("AmdarisInternship.Domain.Entities.ModuleGrading", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<float>("Weight")
+                        .HasColumnType("real");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("ModuleGradings");
+                });
+
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.Promotion", b =>
                 {
                     b.Property<int>("Id")
@@ -212,6 +242,28 @@ namespace AmdarisInternship.Infrastructure.Migrations
                     b.ToTable("Promotions");
 
                     b.HasCheckConstraint("CK_Promotion_Name", "Name != ''");
+                });
+
+            modelBuilder.Entity("AmdarisInternship.Domain.Entities.PromotionModule", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("ModuleId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromotionId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("PromotionId");
+
+                    b.ToTable("PromotionModules");
                 });
 
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.Role", b =>
@@ -330,32 +382,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                     b.HasCheckConstraint("CK_UserEmail_Email", "Email != '' and Email LIKE '%_@_%._%'");
                 });
 
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserLog", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("NewUserRoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("OldUserRoleId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("UpdateTime")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserLogs");
-                });
-
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserPromotion", b =>
                 {
                     b.Property<int>("Id")
@@ -461,6 +487,12 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .HasForeignKey("ExamId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("AmdarisInternship.Domain.Entities.ModuleGrading", "ModuleGrading")
+                        .WithMany("ExamGradeComponents")
+                        .HasForeignKey("ModuleGradingId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.Grade", b =>
@@ -499,6 +531,30 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AmdarisInternship.Domain.Entities.ModuleGrading", b =>
+                {
+                    b.HasOne("AmdarisInternship.Domain.Entities.Module", null)
+                        .WithMany("ModuleGradings")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("AmdarisInternship.Domain.Entities.PromotionModule", b =>
+                {
+                    b.HasOne("AmdarisInternship.Domain.Entities.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AmdarisInternship.Domain.Entities.Promotion", "Promotion")
+                        .WithMany()
+                        .HasForeignKey("PromotionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserAvatar", b =>
                 {
                     b.HasOne("AmdarisInternship.Domain.Entities.User", "User")
@@ -514,15 +570,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .WithOne("UserEmail")
                         .HasForeignKey("AmdarisInternship.Domain.Entities.UserEmail", "UserId")
                         .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserLog", b =>
-                {
-                    b.HasOne("AmdarisInternship.Domain.Entities.User", "User")
-                        .WithMany("UserLogs")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

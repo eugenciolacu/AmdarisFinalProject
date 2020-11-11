@@ -12,12 +12,13 @@ namespace AmdarisInternship.Infrastructure.Context
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Module> Modules { get; set; }
+        public DbSet<ModuleGrading> ModuleGradings { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
+        public DbSet<PromotionModule> PromotionModules { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<UserAvatar> UserAvatars { get; set; }
         public DbSet<UserEmail> UserEmails { get; set; }
-        public DbSet<UserLog> UserLogs { get; set; }
         public DbSet<UserPromotion> UserPromotions { get; set; }
         public DbSet<UserRole> UserRoles { get; set; }
         public DbSet<UserSkype> UserSkypes { get; set; }
@@ -25,13 +26,14 @@ namespace AmdarisInternship.Infrastructure.Context
 
         public AmdarisInternshipContext(DbContextOptions options) : base(options)
         {
-            
+            //Database.EnsureDeleted();
+            //Database.EnsureCreated();
         }
 
-        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        //{
-            
-        //}
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -46,7 +48,6 @@ namespace AmdarisInternship.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new UserAvatarConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
             modelBuilder.ApplyConfiguration(new UserEmailConfig());
-            modelBuilder.ApplyConfiguration(new UserLogConfig());
             modelBuilder.ApplyConfiguration(new UserPromotionConfig());
             modelBuilder.ApplyConfiguration(new UserRoleConfig());
             modelBuilder.ApplyConfiguration(new UserSkypeConfig());

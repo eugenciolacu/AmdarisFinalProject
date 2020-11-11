@@ -10,5 +10,7 @@ namespace AmdarisInternship.Domain.Entities
         public List<Exam> Exams { get; set; }
 
         public List<Lesson> Lessons { get; set; }
+
+        public List<ModuleGrading> ModuleGradings { get; set; }
     }
 }
