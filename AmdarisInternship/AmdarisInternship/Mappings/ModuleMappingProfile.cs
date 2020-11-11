@@ -9,6 +9,8 @@ namespace AmdarisInternship.API.Mappings
         public ModuleMappingProfile()
         {
             CreateMap<Module, ModuleDto>();
+
+            CreateMap<ModuleGrading, ModuleGradingDto>();
         }
     }
 }

@@ -1,5 +1,6 @@
 using AmdarisInternship.API.Mappings;
 using AmdarisInternship.API.Services;
+using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Infrastructure.Context;
 using AmdarisInternship.Infrastructure.Repositories;
 using AutoMapper;
@@ -44,7 +45,7 @@ namespace AmdarisInternship
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            services.AddScoped<IModuleService, ModuleService>();
+            services.AddScoped<IModuleModuleGradingsService, ModuleModuleGradingsService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
