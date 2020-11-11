@@ -25,6 +25,12 @@ namespace AmdarisInternship.API.Controllers
         }
 
         //[HttpGet]
+        //public IActionResult Get()
+        //{
+
+        //}
+
+        //[HttpGet]
         //[ApiExceptionFilter]
         //public IActionResult Get([FromQuery] FilterOptions filterOptions)
         //{
@@ -48,6 +54,14 @@ namespace AmdarisInternship.API.Controllers
 
         //    return Ok(result);
         //}
+
+        [HttpPost]
+        public IActionResult Post([FromBody] CreateModuleModuleGradingDto dto)
+        {
+            var res = _moduleModuleGradingsService.AddNewModuleModuleGradingAsync(dto);
+
+            return Ok();
+        }
 
         //[HttpPost]
         //public IActionResult Post([FromBody] CreateModuleDto dto)
