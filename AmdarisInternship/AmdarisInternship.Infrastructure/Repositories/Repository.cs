@@ -9,7 +9,7 @@ namespace AmdarisInternship.Infrastructure.Repositories
 {
     public class Repository<T> : IRepository<T> where T : BaseEntity
     {
-        private readonly AmdarisInternshipContext _dbContext;
+        protected readonly AmdarisInternshipContext _dbContext;
         private readonly DbSet<T> _dbSet;
 
         public Repository(AmdarisInternshipContext dbContext)

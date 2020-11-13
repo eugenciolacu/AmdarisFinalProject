@@ -18,7 +18,7 @@ namespace AmdarisInternship.API.Services
             _moduleRepository = moduleRepository;
         }
 
-        public Module AddNewModule(CreateModuleDto dto)
+        public Module AddNewModule(ModuleDto dto)
         {
             if (CheckIfNameExists(dto.Name))
             {
@@ -83,7 +83,7 @@ namespace AmdarisInternship.API.Services
             }
         }
 
-        public Module UpdateModule(int id, CreateModuleDto dto)
+        public Module UpdateModule(int id, ModuleDto dto)
         {
             Module module = _moduleRepository.Find(id);
 
@@ -110,7 +110,7 @@ namespace AmdarisInternship.API.Services
             return module;
         }
 
-        public Module UpdateModuleDetails(int id, UpdateModuleDto dto)
+        public Module UpdateModuleDetails(int id, ModuleDto dto)
         {
             Module module = _moduleRepository.Find(id);
 

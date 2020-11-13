@@ -4,70 +4,72 @@ using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Domain.Entities;
 using AmdarisInternship.Infrastructure.Context;
 using AmdarisInternship.Infrastructure.Repositories;
+using AmdarisInternship.Infrastructure.Repositories.CustomRepositories;
 using AutoMapper;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AmdarisInternship.API.Services
 {
     public class ModuleModuleGradingsService : IModuleModuleGradingsService
     {
-        private readonly IRepository<Module> _moduleRepository;
+        private readonly IModuleRepository _moduleRepository;
         private readonly IRepository<ModuleGrading> _moduleGradingRepository;
 
-        private readonly AmdarisInternshipContext _appContext;
         private readonly IMapper _mapper;
 
-        public ModuleModuleGradingsService(AmdarisInternshipContext appContext, IMapper mapper, IRepository<Module> moduleRepository, IRepository<ModuleGrading> moduleGradingRepository)
+        public ModuleModuleGradingsService(IMapper mapper, IModuleRepository moduleRepository, IRepository<ModuleGrading> moduleGradingRepository)
         {
-            _appContext = appContext;
             _mapper = mapper;
             _moduleRepository = moduleRepository;
             _moduleGradingRepository = moduleGradingRepository;
         }
 
-        public async Task<(Module, List<ModuleGrading>)> AddNewModuleModuleGradingAsync(CreateModuleModuleGradingDto dto)
+        public IList<ModuleWithModuleGradingDto> GetModulesWithModuleGradings()
         {
-            await using var transaction = await _appContext.Database.BeginTransactionAsync();
+            var modules = _moduleRepository.GetModulesWithModuleGradings();
 
-            try
+            IList<ModuleWithModuleGradingDto> result = new List<ModuleWithModuleGradingDto>();
+
+            foreach (var item in modules)
             {
-                (Module module, List<ModuleGrading> moduleGradings) result;
+                ModuleWithModuleGradingDto moduleWithGradingDto = new ModuleWithModuleGradingDto();
+                moduleWithGradingDto.Module = _mapper.Map<ModuleDto>(item);
 
-                Module module = _mapper.Map<Module>(dto.CreateModuleDto);
-                
-                _moduleRepository.Add(module);
-                _moduleRepository.Save();
-
-                List<ModuleGrading> moduleGradings = new List<ModuleGrading>();
-
-                for (int i = 0; i < dto.CreateModuleGradingDtos.Count; i++)
+                foreach (var moduleGrading in item.ModuleGradings)
                 {
-                    ModuleGrading moduleGrading = new ModuleGrading
-                    {
-                        Name = dto.CreateModuleGradingDtos[i].Name,
-                        Weight = dto.CreateModuleGradingDtos[i].Weight,
-                        ModuleId = module.Id
-                    };
-
-                    moduleGradings.Add(moduleGrading);
-                    _moduleGradingRepository.Add(moduleGrading);
+                    moduleWithGradingDto.ModuleGradings.Add(_mapper.Map<ModuleGradingDto>(moduleGrading));
                 }
-                _moduleGradingRepository.Save();
 
-                result.module = module;
-                result.moduleGradings = moduleGradings;
-
-                await transaction.CommitAsync();
-
-                return result;
+                result.Add(moduleWithGradingDto);
             }
-            catch
-            {
-                await transaction.RollbackAsync();
-                return (null, null);
-            }
+
+            return result;
         }
-        
+
+        public void AddNewModuleModuleGradingAsync(ModuleWithModuleGradingDto dto)
+        {
+            Module module = _mapper.Map<Module>(dto.Module);
+
+            _moduleRepository.Add(module);
+            _moduleRepository.Save();
+
+            List<ModuleGrading> moduleGradings = new List<ModuleGrading>();
+
+            for (int i = 0; i < dto.ModuleGradings.Count; i++)
+            {
+                ModuleGrading moduleGrading = new ModuleGrading
+                {
+                    Name = dto.ModuleGradings[i].Name,
+                    Weight = dto.ModuleGradings[i].Weight,
+                    ModuleId = module.Id
+                };
+
+                moduleGradings.Add(moduleGrading);
+                _moduleGradingRepository.Add(moduleGrading);
+            }
+            _moduleGradingRepository.Save();
+        }    
     }
 }

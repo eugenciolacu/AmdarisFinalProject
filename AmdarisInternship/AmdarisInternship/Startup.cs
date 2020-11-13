@@ -3,6 +3,7 @@ using AmdarisInternship.API.Services;
 using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Infrastructure.Context;
 using AmdarisInternship.Infrastructure.Repositories;
+using AmdarisInternship.Infrastructure.Repositories.CustomRepositories;
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -44,6 +45,8 @@ namespace AmdarisInternship
             services.AddSingleton(mapperConfig.CreateMapper());
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+            services.AddScoped<IModuleRepository, ModuleRepository>();
 
             services.AddScoped<IModuleModuleGradingsService, ModuleModuleGradingsService>();
         }

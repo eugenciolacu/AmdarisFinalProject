@@ -7,6 +7,8 @@ namespace AmdarisInternship.API.Services.Interfaces
 {
     public interface IModuleModuleGradingsService
     {
-        Task<(Module, List<ModuleGrading>)> AddNewModuleModuleGradingAsync(CreateModuleModuleGradingDto dto);
+        void AddNewModuleModuleGradingAsync(ModuleWithModuleGradingDto dto);
+
+        IList<ModuleWithModuleGradingDto> GetModulesWithModuleGradings();
     }
 }

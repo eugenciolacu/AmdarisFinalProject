@@ -24,11 +24,17 @@ namespace AmdarisInternship.API.Controllers
             _mapper = mapper;
         }
 
-        //[HttpGet]
-        //public IActionResult Get()
-        //{
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok (_moduleModuleGradingsService.GetModulesWithModuleGradings());
 
-        //}
+
+            //IList<Module> modules = _moduleService.GetModules(filterOptions);
+            //IEnumerable<ModuleDto> result = modules.Select(m => _mapper.Map<ModuleDto>(m));
+
+            //return Ok(result);
+        }
 
         //[HttpGet]
         //[ApiExceptionFilter]
@@ -56,9 +62,9 @@ namespace AmdarisInternship.API.Controllers
         //}
 
         [HttpPost]
-        public IActionResult Post([FromBody] CreateModuleModuleGradingDto dto)
+        public IActionResult Post([FromBody] ModuleWithModuleGradingDto dto)
         {
-            var res = _moduleModuleGradingsService.AddNewModuleModuleGradingAsync(dto);
+            _moduleModuleGradingsService.AddNewModuleModuleGradingAsync(dto);
 
             return Ok();
         }

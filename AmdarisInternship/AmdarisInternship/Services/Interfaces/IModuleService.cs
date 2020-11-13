@@ -11,11 +11,11 @@ namespace AmdarisInternship.API.Services
 
         Module GetModuleById(int id);
 
-        Module AddNewModule(CreateModuleDto dto);
+        Module AddNewModule(ModuleDto dto);
 
-        Module UpdateModuleDetails(int id, UpdateModuleDto dto);
+        Module UpdateModuleDetails(int id, ModuleDto dto);
 
-        Module UpdateModule(int id, CreateModuleDto dto);
+        Module UpdateModule(int id, ModuleDto dto);
 
         bool RemoveModuleById(int id);
     }
