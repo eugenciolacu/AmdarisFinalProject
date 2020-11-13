@@ -28,61 +28,29 @@ namespace AmdarisInternship.API.Controllers
         public IActionResult Get()
         {
             return Ok (_moduleModuleGradingsService.GetModulesWithModuleGradings());
-
-
-            //IList<Module> modules = _moduleService.GetModules(filterOptions);
-            //IEnumerable<ModuleDto> result = modules.Select(m => _mapper.Map<ModuleDto>(m));
-
-            //return Ok(result);
         }
 
-        //[HttpGet]
-        //[ApiExceptionFilter]
-        //public IActionResult Get([FromQuery] FilterOptions filterOptions)
-        //{
-        //    IList<Module> modules = _moduleService.GetModules(filterOptions);
-        //    IEnumerable<ModuleDto> result = modules.Select(m => _mapper.Map<ModuleDto>(m));
-
-        //    return Ok(result);
-        //}
-
-        //[HttpGet("{id}")]
-        //public IActionResult Get(int id)
-        //{
-        //    Module module = _moduleService.GetModuleById(id);
-
-        //    if (module == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    ModuleDto result = _mapper.Map<ModuleDto>(module);
-
-        //    return Ok(result);
-        //}
+        [HttpGet("{id}")]
+        public IActionResult Get(int id)
+        {
+            return Ok(_moduleModuleGradingsService.GetModuleWithModuleGradingsByModuleId(id));
+        }
 
         [HttpPost]
         public IActionResult Post([FromBody] ModuleWithModuleGradingDto dto)
         {
-            _moduleModuleGradingsService.AddNewModuleModuleGradingAsync(dto);
+            var moduleWithGrading = _moduleModuleGradingsService.AddNewModuleWithModuleGrading(dto);
 
-            return Ok();
+            return CreatedAtAction(nameof(Get), new { id = moduleWithGrading.Module.Id }, moduleWithGrading);
         }
 
-        //[HttpPost]
-        //public IActionResult Post([FromBody] CreateModuleDto dto)
-        //{
-        //    var module = _moduleService.AddNewModule(dto);
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, ModuleWithModuleGradingDto dto)
+        {
+            var moduleWithGrading = _moduleModuleGradingsService.UpdateModuleWithModuleGrading(id, dto);
 
-        //    if (module == null)
-        //    {
-        //        return BadRequest("Module with such Name already exists");
-        //    }
-
-        //    var result = _mapper.Map<ModuleDto>(module);
-
-        //    return CreatedAtAction(nameof(Get), new { id = module.Id }, result);
-        //}
+            return CreatedAtAction(nameof(Get), new { id = moduleWithGrading.Module.Id }, moduleWithGrading);
+        }
 
         //[HttpPut("{id}")]
         //[ApiExceptionFilter]

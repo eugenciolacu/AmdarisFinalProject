@@ -1,14 +1,11 @@
 ﻿using AmdarisInternship.API.Dtos;
-using AmdarisInternship.API.Models;
 using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Domain.Entities;
-using AmdarisInternship.Infrastructure.Context;
 using AmdarisInternship.Infrastructure.Repositories;
 using AmdarisInternship.Infrastructure.Repositories.CustomRepositories;
 using AutoMapper;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AmdarisInternship.API.Services
 {
@@ -24,6 +21,21 @@ namespace AmdarisInternship.API.Services
             _mapper = mapper;
             _moduleRepository = moduleRepository;
             _moduleGradingRepository = moduleGradingRepository;
+        }
+
+        public ModuleWithModuleGradingDto GetModuleWithModuleGradingsByModuleId(int id)
+        {
+            var module = _moduleRepository.GetModuleWithModuleGradingsByModuleId(id);
+
+            ModuleWithModuleGradingDto result = new ModuleWithModuleGradingDto();
+            result.Module = _mapper.Map<ModuleDto>(module);
+
+            foreach (var moduleGrading in module.ModuleGradings)
+            {
+                result.ModuleGradings.Add(_mapper.Map<ModuleGradingDto>(moduleGrading));
+            }
+
+            return result;
         }
 
         public IList<ModuleWithModuleGradingDto> GetModulesWithModuleGradings()
@@ -48,7 +60,7 @@ namespace AmdarisInternship.API.Services
             return result;
         }
 
-        public void AddNewModuleModuleGradingAsync(ModuleWithModuleGradingDto dto)
+        public ModuleWithModuleGradingDto AddNewModuleWithModuleGrading(ModuleWithModuleGradingDto dto)
         {
             Module module = _mapper.Map<Module>(dto.Module);
 
@@ -70,6 +82,46 @@ namespace AmdarisInternship.API.Services
                 _moduleGradingRepository.Add(moduleGrading);
             }
             _moduleGradingRepository.Save();
+
+            return GetModuleWithModuleGradingsByModuleId(module.Id);
         }    
+
+        public ModuleWithModuleGradingDto UpdateModuleWithModuleGrading (int id, ModuleWithModuleGradingDto dto)
+        {
+            Module module = _moduleRepository.GetModuleWithModuleGradingsByModuleId(id);
+
+            module.Name = dto.Module.Name;
+
+            foreach(var item in dto.ModuleGradings)
+            {
+                var moduleGrading = module.ModuleGradings.FirstOrDefault(x => x.Id == item.Id);
+
+                if (moduleGrading != null)
+                {
+                    moduleGrading.Name = item.Name;
+                    moduleGrading.Weight = item.Weight;
+                }
+
+                // new ModuleGrading
+                if (item.Id == 0)
+                {
+                    module.ModuleGradings.Add(_mapper.Map<ModuleGrading>(item));
+                }
+            }
+
+            // delete moduleGrading
+            var moduleGradingDtoIds = dto.ModuleGradings.Select(x => x.Id);
+
+            var modelGradingToDelete = module.ModuleGradings.Where(x => !moduleGradingDtoIds.Contains(x.Id));
+
+            foreach(var item in modelGradingToDelete)
+            {
+                _moduleGradingRepository.Delete(item);
+            }
+
+            _moduleRepository.Save();
+
+            return GetModuleWithModuleGradingsByModuleId(id);
+        }
     }
 }
