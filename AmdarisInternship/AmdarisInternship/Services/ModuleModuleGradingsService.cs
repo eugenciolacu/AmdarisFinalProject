@@ -1,4 +1,5 @@
 ﻿using AmdarisInternship.API.Dtos;
+using AmdarisInternship.API.Exceptions;
 using AmdarisInternship.API.Services.Interfaces;
 using AmdarisInternship.Domain.Entities;
 using AmdarisInternship.Infrastructure.Repositories;
@@ -26,6 +27,11 @@ namespace AmdarisInternship.API.Services
         public ModuleWithModuleGradingDto GetModuleWithModuleGradingsByModuleId(int id)
         {
             var module = _moduleRepository.GetModuleWithModuleGradingsByModuleId(id);
+
+            if (module == null)
+            {
+                throw new NotFoundException("Module not found");
+            }
 
             ModuleWithModuleGradingDto result = new ModuleWithModuleGradingDto();
             result.Module = _mapper.Map<ModuleDto>(module);
@@ -62,6 +68,11 @@ namespace AmdarisInternship.API.Services
 
         public ModuleWithModuleGradingDto AddNewModuleWithModuleGrading(ModuleWithModuleGradingDto dto)
         {
+            if (CheckIfModuleExists(dto.Module.Name))
+            {
+                return null;
+            }
+
             Module module = _mapper.Map<Module>(dto.Module);
 
             _moduleRepository.Add(module);
@@ -71,6 +82,11 @@ namespace AmdarisInternship.API.Services
 
             for (int i = 0; i < dto.ModuleGradings.Count; i++)
             {
+                if (CheckIfModuleGradingExists(dto.ModuleGradings[i].Name, module.Id))
+                {
+                    continue;
+                }
+
                 ModuleGrading moduleGrading = new ModuleGrading
                 {
                     Name = dto.ModuleGradings[i].Name,
@@ -84,15 +100,20 @@ namespace AmdarisInternship.API.Services
             _moduleGradingRepository.Save();
 
             return GetModuleWithModuleGradingsByModuleId(module.Id);
-        }    
+        }
 
-        public ModuleWithModuleGradingDto UpdateModuleWithModuleGrading (int id, ModuleWithModuleGradingDto dto)
+        public ModuleWithModuleGradingDto UpdateModuleWithModuleGrading(int id, ModuleWithModuleGradingDto dto)
         {
             Module module = _moduleRepository.GetModuleWithModuleGradingsByModuleId(id);
 
+            if (module == null)
+            {
+                throw new NotFoundException("Module not found");
+            }
+
             module.Name = dto.Module.Name;
 
-            foreach(var item in dto.ModuleGradings)
+            foreach (var item in dto.ModuleGradings)
             {
                 var moduleGrading = module.ModuleGradings.FirstOrDefault(x => x.Id == item.Id);
 
@@ -103,7 +124,7 @@ namespace AmdarisInternship.API.Services
                 }
 
                 // new ModuleGrading
-                if (item.Id == 0)
+                if (item.Id == 0 && CheckIfModuleGradingExists(item.Name, module.Id) == false)
                 {
                     module.ModuleGradings.Add(_mapper.Map<ModuleGrading>(item));
                 }
@@ -114,7 +135,7 @@ namespace AmdarisInternship.API.Services
 
             var modelGradingToDelete = module.ModuleGradings.Where(x => !moduleGradingDtoIds.Contains(x.Id));
 
-            foreach(var item in modelGradingToDelete)
+            foreach (var item in modelGradingToDelete)
             {
                 _moduleGradingRepository.Delete(item);
             }
@@ -122,6 +143,16 @@ namespace AmdarisInternship.API.Services
             _moduleRepository.Save();
 
             return GetModuleWithModuleGradingsByModuleId(id);
+        }
+
+        private bool CheckIfModuleExists(string name)
+        {
+            return _moduleRepository.Find(x => x.Name == name) != null;
+        }
+
+        private bool CheckIfModuleGradingExists(string name, int moduleId)
+        {
+            return _moduleGradingRepository.Find(x => x.ModuleId == moduleId && x.Name == name) != null;
         }
     }
 }
