@@ -1,10 +1,7 @@
 ﻿using AmdarisInternship.API.Dtos;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.AspNetCore.TestHost;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -28,9 +25,9 @@ namespace AmdarisInternship.API.Tests
             var request = "/api/Module";
             var response = await _client.GetAsync(request);
             response.EnsureSuccessStatusCode();
-            //var jsonFromPostResponse = await response.Content.ReadAsStringAsync();
-            //var obj = JsonConvert.DeserializeObject<List<ModuleWithModuleGradingDto>>(jsonFromPostResponse);
-            //Assert.IsTrue(obj.Count == 9);
+            var jsonFromPostResponse = await response.Content.ReadAsStringAsync();
+            var obj = JsonConvert.DeserializeObject<List<ModuleWithModuleGradingDto>>(jsonFromPostResponse);
+            Assert.IsTrue(obj.Count == 6);
         }
 
         [TestMethod]
@@ -41,9 +38,9 @@ namespace AmdarisInternship.API.Tests
             if (response.IsSuccessStatusCode)
             {
                 var jsonFromPostResponse = await response.Content.ReadAsStringAsync();
-                var obj = JsonConvert.DeserializeObject<List<ModuleWithModuleGradingDto>>(jsonFromPostResponse);
-                Assert.AreEqual(obj[0].Module.Name, "C#");
-                Assert.IsTrue(obj[0].ModuleGradings.Count == 4);
+                var obj = JsonConvert.DeserializeObject<ModuleWithModuleGradingDto>(jsonFromPostResponse);
+                Assert.AreEqual(obj.Module.Name, "Module 1");
+                Assert.IsTrue(obj.ModuleGradings.Count == 2);
             }
             response.EnsureSuccessStatusCode();
         }
@@ -56,7 +53,26 @@ namespace AmdarisInternship.API.Tests
                 Url = "/api/Module",
                 Body = new
                 {
+                    module = new ModuleDto
+                    {
+                        Name = "Test"
+                    },
 
+                    moduleGradings = new List<ModuleGradingDto>
+                    {
+                        new ModuleGradingDto
+                        {
+                            Name = "Quiz 1",
+                            Weight = 0.5f,
+                            ModuleId = 10
+                        },
+                        new ModuleGradingDto
+                        {
+                            Name = "Quiz 2",
+                            Weight = 0.5f,
+                            ModuleId = 10
+                        }
+                    }
                 }
             };
 
@@ -72,11 +88,33 @@ namespace AmdarisInternship.API.Tests
                 Url = "/api/Module/1",
                 Body = new
                 {
+                    module = new ModuleDto
+                    {
+                        Id = 1,
+                        Name = "xxxxx"
+                    },
 
+                    moduleGradings = new List<ModuleGradingDto>
+                    {
+                        new ModuleGradingDto
+                        {
+                            Id = 1,
+                            Name = "Quiz 1",
+                            Weight = 0.5f,
+                            ModuleId = 1
+                        },
+                        new ModuleGradingDto
+                        {
+                            Id = 2,
+                            Name = "Quiz 2",
+                            Weight = 0.5f,
+                            ModuleId = 1
+                        }
+                    }
                 }
             };
 
-            var putResponse = await _client.PatchAsync(request.Url, ContentHelper.GetStringContent(request.Body));
+            var putResponse = await _client.PutAsync(request.Url, ContentHelper.GetStringContent(request.Body));
             putResponse.EnsureSuccessStatusCode();
         }
     }
