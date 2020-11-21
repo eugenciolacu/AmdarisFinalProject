@@ -3,20 +3,7 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import { Paper } from '@material-ui/core';
-// import {
-//     BrowserRouter as Router,
-//     Switch,
-//     Route,
-//     Link
-// } from 'react-router-dom';
-import ModuleForm from '../ModuleForm/ModuleForm';
-
-// const routes = [
-//     {
-//         path: "/modules",
-//         component: ModuleForm
-//     }
-// ];
+import ModuleForm from './ModuleForm';
 
 export default function Navigation() {
     const classes = useStyles();
