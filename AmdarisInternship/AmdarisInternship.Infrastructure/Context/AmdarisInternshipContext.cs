@@ -1,10 +1,12 @@
 ﻿using AmdarisInternship.Domain.Entities;
-using AmdarisInternship.Infrastructure.Configurations;
+using AmdarisInternship.Domain.Entities.Auth;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using AmdarisInternship.Infrastructure.Configurations;
 
 namespace AmdarisInternship.Infrastructure.Context
 {
-    public class AmdarisInternshipContext : DbContext
+    public class AmdarisInternshipContext : IdentityDbContext<ApplicationUser, Role, long>  // DbContext
     {
         public DbSet<Attachment> Attachments { get; set; }
         public DbSet<Exam> Exams { get; set; }

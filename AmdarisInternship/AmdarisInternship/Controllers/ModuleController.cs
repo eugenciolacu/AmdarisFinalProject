@@ -2,10 +2,12 @@
 using AmdarisInternship.API.Exceptions;
 using AmdarisInternship.API.Services.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AmdarisInternship.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ModuleController : Controller // ControllerBase
