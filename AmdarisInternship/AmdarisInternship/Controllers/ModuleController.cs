@@ -1,11 +1,14 @@
 ﻿using AmdarisInternship.API.Dtos;
 using AmdarisInternship.API.Exceptions;
 using AmdarisInternship.API.Services.Interfaces;
+using AmdarisInternship.Domain.Entities.Authentication;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AmdarisInternship.API.Controllers
 {
+    [Authorize(Roles = UserRoles.Administrator)]
     [Route("api/[controller]")]
     [ApiController]
     public class ModuleController : Controller // ControllerBase

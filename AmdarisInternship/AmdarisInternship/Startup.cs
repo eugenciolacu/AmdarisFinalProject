@@ -1,17 +1,22 @@
 using AmdarisInternship.API.Mappings;
 using AmdarisInternship.API.Services;
 using AmdarisInternship.API.Services.Interfaces;
+using AmdarisInternship.Domain.Entities.Authentication;
 using AmdarisInternship.Infrastructure.Context;
 using AmdarisInternship.Infrastructure.Repositories;
 using AmdarisInternship.Infrastructure.Repositories.CustomRepositories;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 
 namespace AmdarisInternship
 {
@@ -28,10 +33,47 @@ namespace AmdarisInternship
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddControllers();
+
             services.AddDbContext<AmdarisInternshipContext>(optionBuilder =>
             {
                 optionBuilder.UseSqlServer(Configuration.GetConnectionString("DbConnection"));
             });
+
+
+
+
+            // For Identity  
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<AmdarisInternshipContext>()
+                .AddDefaultTokenProviders();
+
+            // Adding Authentication  
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+
+            // Adding Jwt Bearer  
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.RequireHttpsMetadata = false;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = Configuration["JWT:ValidAudience"],
+                    ValidIssuer = Configuration["JWT:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JWT:Secret"]))
+                };
+            });
+
+
+
+
 
             var mapperConfig = new MapperConfiguration(m =>
             {
@@ -39,8 +81,6 @@ namespace AmdarisInternship
             });
 
             ConfigureSwagger(services);
-
-            services.AddControllers();
 
             services.AddSingleton(mapperConfig.CreateMapper());
 
