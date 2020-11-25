@@ -14,5 +14,8 @@ namespace AmdarisInternship.Domain.Entities.Authentication
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
 
+        [Required(ErrorMessage = "Role is required")]
+        public string UserRole { get; set; }
+
     }
 }

@@ -6,26 +6,23 @@ namespace AmdarisInternship.Domain.Entities
 {
     public class User : BaseEntity
     {
+        public string IidentityId { get; set; }
+
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
 
+        public string Email { get; set; }
+
+        public string Skype { get; set; }
+
+        public string AvatarExtension { get; set; }
+
+        public string AvatarName { get; set; }
+
+        public byte[] Avatar { get; set; }
+
         public Nullable<int> MentroId { get; set; }
-
-        public Nullable<int> UserEmailId { get; set; }
-
-        public Nullable<int> UserSkypeId { get; set; }
-
-        public Nullable<int> UserAvatarId { get; set; }
-
-
-        public UserEmail UserEmail { get; set; }
-
-        public UserSkype UserSkype { get; set; }
-
-        public UserAvatar UserAvatar { get; set; }
-
-        public List<UserRole> UserRoles { get; set; }
 
         public List<Exam> Exams { get; set; }
 

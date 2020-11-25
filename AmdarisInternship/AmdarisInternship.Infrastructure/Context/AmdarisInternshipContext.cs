@@ -1,10 +1,8 @@
 ﻿using AmdarisInternship.Domain.Entities;
 using AmdarisInternship.Domain.Entities.Authentication;
 using AmdarisInternship.Infrastructure.Configurations;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using System;
 
 namespace AmdarisInternship.Infrastructure.Context
 {
@@ -19,13 +17,8 @@ namespace AmdarisInternship.Infrastructure.Context
         public DbSet<ModuleGrading> ModuleGradings { get; set; }
         public DbSet<Promotion> Promotions { get; set; }
         public DbSet<PromotionModule> PromotionModules { get; set; }
-        public DbSet<Role> Roles_ { get; set; }
         public DbSet<User> Users_ { get; set; }
-        public DbSet<UserAvatar> UserAvatars { get; set; }
-        public DbSet<UserEmail> UserEmails { get; set; }
         public DbSet<UserPromotion> UserPromotions { get; set; }
-        public DbSet<UserRole> UserRoles_ { get; set; }
-        public DbSet<UserSkype> UserSkypes { get; set; }
 
         public AmdarisInternshipContext(DbContextOptions options) : base(options)
         {
@@ -49,13 +42,8 @@ namespace AmdarisInternship.Infrastructure.Context
             modelBuilder.ApplyConfiguration(new LessonConfig());
             modelBuilder.ApplyConfiguration(new ModuleConfig());
             modelBuilder.ApplyConfiguration(new PromotionConfig());
-            modelBuilder.ApplyConfiguration(new RoleConfig());
-            modelBuilder.ApplyConfiguration(new UserAvatarConfig());
             modelBuilder.ApplyConfiguration(new UserConfig());
-            modelBuilder.ApplyConfiguration(new UserEmailConfig());
             modelBuilder.ApplyConfiguration(new UserPromotionConfig());
-            modelBuilder.ApplyConfiguration(new UserRoleConfig());
-            modelBuilder.ApplyConfiguration(new UserSkypeConfig());
         }
     }
 }

@@ -89,6 +89,8 @@ namespace AmdarisInternship
             services.AddScoped<IModuleRepository, ModuleRepository>();
 
             services.AddScoped<IModuleModuleGradingsService, ModuleModuleGradingsService>();
+
+            services.AddScoped<IAuthenticateService, AuthenticateService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

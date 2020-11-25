@@ -22,6 +22,38 @@ namespace AmdarisInternship.Infrastructure.Configurations
             builder
                 .HasCheckConstraint("CK_User_FirstName", "FirstName != ''")
                 .HasCheckConstraint("CK_User_LastName", "LastName != ''");
+
+            builder.Property(u => u.Email)
+                .IsRequired()
+                .HasMaxLength(320);
+
+            builder
+                .HasIndex(u => u.Email)
+                .IsUnique();
+
+            builder
+                .HasCheckConstraint("CK_User_UserEmail", "Email != '' and Email LIKE '%_@_%._%'");
+
+            //builder.Property(u => u.Skype)
+            //    .IsRequired()
+            //    .HasMaxLength(32);
+
+            builder
+                .HasIndex(us => us.Skype)
+                .IsUnique();
+
+            builder.HasCheckConstraint("CK_User_Skype", "DATALENGTH(Skype) >= 6 and Skype != ''");
+
+            //builder.Property(ua => ua.AvatarExtension)
+            //    .IsRequired()
+            //    .HasMaxLength(50);
+
+            //builder.Property(ua => ua.AvatarName)
+            //    .IsRequired()
+            //    .HasMaxLength(256);
+
+            //builder.Property(ua => ua.Avatar)
+            //    .IsRequired();
         }
     }
 }

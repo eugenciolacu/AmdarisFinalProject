@@ -77,36 +77,28 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Roles_",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Role_ = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Roles_", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Users_",
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    IidentityId = table.Column<string>(nullable: true),
                     FirstName = table.Column<string>(maxLength: 100, nullable: false),
                     LastName = table.Column<string>(maxLength: 100, nullable: false),
-                    MentroId = table.Column<int>(nullable: true),
-                    UserEmailId = table.Column<int>(nullable: true),
-                    UserSkypeId = table.Column<int>(nullable: true),
-                    UserAvatarId = table.Column<int>(nullable: true)
+                    Email = table.Column<string>(maxLength: 320, nullable: false),
+                    Skype = table.Column<string>(nullable: true),
+                    AvatarExtension = table.Column<string>(nullable: true),
+                    AvatarName = table.Column<string>(nullable: true),
+                    Avatar = table.Column<byte[]>(nullable: true),
+                    MentroId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Users_", x => x.Id);
                     table.CheckConstraint("CK_User_FirstName", "FirstName != ''");
                     table.CheckConstraint("CK_User_LastName", "LastName != ''");
+                    table.CheckConstraint("CK_User_UserEmail", "Email != '' and Email LIKE '%_@_%._%'");
+                    table.CheckConstraint("CK_User_Skype", "DATALENGTH(Skype) >= 6 and Skype != ''");
                 });
 
             migrationBuilder.CreateTable(
@@ -330,49 +322,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UserAvatars",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    AvatarExtension = table.Column<string>(maxLength: 50, nullable: false),
-                    AvatarName = table.Column<string>(maxLength: 256, nullable: false),
-                    Avatar = table.Column<byte[]>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserAvatars", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserAvatars_Users__UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users_",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserEmails",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Email = table.Column<string>(maxLength: 320, nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserEmails", x => x.Id);
-                    table.CheckConstraint("CK_UserEmail_Email", "Email != '' and Email LIKE '%_@_%._%'");
-                    table.ForeignKey(
-                        name: "FK_UserEmails_Users__UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users_",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "UserPromotions",
                 columns: table => new
                 {
@@ -396,53 +345,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         principalTable: "Users_",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserRoles_",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoleId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserRoles_", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_UserRoles__Roles__RoleId",
-                        column: x => x.RoleId,
-                        principalTable: "Roles_",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_UserRoles__Users__UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users_",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "UserSkypes",
-                columns: table => new
-                {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Skype = table.Column<string>(maxLength: 32, nullable: false),
-                    UserId = table.Column<int>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_UserSkypes", x => x.Id);
-                    table.CheckConstraint("CK_UserSkype_Skype", "DATALENGTH(Skype) >= 6 and Skype != ''");
-                    table.ForeignKey(
-                        name: "FK_UserSkypes_Users__UserId",
-                        column: x => x.UserId,
-                        principalTable: "Users_",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -632,30 +534,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 column: "PromotionId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Roles__Role_",
-                table: "Roles_",
-                column: "Role_",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserAvatars_UserId",
-                table: "UserAvatars",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserEmails_Email",
-                table: "UserEmails",
-                column: "Email",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserEmails_UserId",
-                table: "UserEmails",
-                column: "UserId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_UserPromotions_PromotionId",
                 table: "UserPromotions",
                 column: "PromotionId");
@@ -667,27 +545,17 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserRoles__UserId",
-                table: "UserRoles_",
-                column: "UserId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserRoles__RoleId_UserId",
-                table: "UserRoles_",
-                columns: new[] { "RoleId", "UserId" },
+                name: "IX_Users__Email",
+                table: "Users_",
+                column: "Email",
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserSkypes_Skype",
-                table: "UserSkypes",
+                name: "IX_Users__Skype",
+                table: "Users_",
                 column: "Skype",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_UserSkypes_UserId",
-                table: "UserSkypes",
-                column: "UserId",
-                unique: true);
+                unique: true,
+                filter: "[Skype] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -720,19 +588,7 @@ namespace AmdarisInternship.Infrastructure.Migrations
                 name: "PromotionModules");
 
             migrationBuilder.DropTable(
-                name: "UserAvatars");
-
-            migrationBuilder.DropTable(
-                name: "UserEmails");
-
-            migrationBuilder.DropTable(
                 name: "UserPromotions");
-
-            migrationBuilder.DropTable(
-                name: "UserRoles_");
-
-            migrationBuilder.DropTable(
-                name: "UserSkypes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
@@ -748,9 +604,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Lessons");
-
-            migrationBuilder.DropTable(
-                name: "Roles_");
 
             migrationBuilder.DropTable(
                 name: "Users_");

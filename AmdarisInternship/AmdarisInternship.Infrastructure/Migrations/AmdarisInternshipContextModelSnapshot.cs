@@ -329,24 +329,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                     b.ToTable("PromotionModules");
                 });
 
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("Role_")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Role_")
-                        .IsUnique();
-
-                    b.ToTable("Roles_");
-                });
-
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.User", b =>
                 {
                     b.Property<int>("Id")
@@ -354,10 +336,27 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(max)");
+
+                    b.Property<string>("AvatarExtension")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("AvatarName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(320)")
+                        .HasMaxLength(320);
+
                     b.Property<string>("FirstName")
                         .IsRequired()
                         .HasColumnType("nvarchar(100)")
                         .HasMaxLength(100);
+
+                    b.Property<string>("IidentityId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
@@ -367,82 +366,27 @@ namespace AmdarisInternship.Infrastructure.Migrations
                     b.Property<int?>("MentroId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserAvatarId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserEmailId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("UserSkypeId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Users_");
-
-                    b.HasCheckConstraint("CK_User_FirstName", "FirstName != ''");
-
-                    b.HasCheckConstraint("CK_User_LastName", "LastName != ''");
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserAvatar", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<byte[]>("Avatar")
-                        .IsRequired()
-                        .HasColumnType("varbinary(max)");
-
-                    b.Property<string>("AvatarExtension")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(50)")
-                        .HasMaxLength(50);
-
-                    b.Property<string>("AvatarName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(256)")
-                        .HasMaxLength(256);
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserAvatars");
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserEmail", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(320)")
-                        .HasMaxLength(320);
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
+                    b.Property<string>("Skype")
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("Skype")
+                        .IsUnique()
+                        .HasFilter("[Skype] IS NOT NULL");
 
-                    b.ToTable("UserEmails");
+                    b.ToTable("Users_");
 
-                    b.HasCheckConstraint("CK_UserEmail_Email", "Email != '' and Email LIKE '%_@_%._%'");
+                    b.HasCheckConstraint("CK_User_FirstName", "FirstName != ''");
+
+                    b.HasCheckConstraint("CK_User_LastName", "LastName != ''");
+
+                    b.HasCheckConstraint("CK_User_UserEmail", "Email != '' and Email LIKE '%_@_%._%'");
+
+                    b.HasCheckConstraint("CK_User_Skype", "DATALENGTH(Skype) >= 6 and Skype != ''");
                 });
 
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserPromotion", b =>
@@ -466,57 +410,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .IsUnique();
 
                     b.ToTable("UserPromotions");
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("RoleId", "UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserRoles_");
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserSkype", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Skype")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(32)")
-                        .HasMaxLength(32);
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("Skype")
-                        .IsUnique();
-
-                    b.HasIndex("UserId")
-                        .IsUnique();
-
-                    b.ToTable("UserSkypes");
-
-                    b.HasCheckConstraint("CK_UserSkype_Skype", "DATALENGTH(Skype) >= 6 and Skype != ''");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -749,24 +642,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserAvatar", b =>
-                {
-                    b.HasOne("AmdarisInternship.Domain.Entities.User", "User")
-                        .WithOne("UserAvatar")
-                        .HasForeignKey("AmdarisInternship.Domain.Entities.UserAvatar", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserEmail", b =>
-                {
-                    b.HasOne("AmdarisInternship.Domain.Entities.User", "User")
-                        .WithOne("UserEmail")
-                        .HasForeignKey("AmdarisInternship.Domain.Entities.UserEmail", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserPromotion", b =>
                 {
                     b.HasOne("AmdarisInternship.Domain.Entities.Promotion", "Promotion")
@@ -779,30 +654,6 @@ namespace AmdarisInternship.Infrastructure.Migrations
                         .WithMany("UserPromotions")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserRole", b =>
-                {
-                    b.HasOne("AmdarisInternship.Domain.Entities.Role", "Role")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AmdarisInternship.Domain.Entities.User", "User")
-                        .WithMany("UserRoles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("AmdarisInternship.Domain.Entities.UserSkype", b =>
-                {
-                    b.HasOne("AmdarisInternship.Domain.Entities.User", "User")
-                        .WithOne("UserSkype")
-                        .HasForeignKey("AmdarisInternship.Domain.Entities.UserSkype", "UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 
