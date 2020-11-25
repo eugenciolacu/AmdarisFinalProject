@@ -50,6 +50,23 @@ namespace AmdarisInternship.API.Controllers
             }
         }
 
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        {
+            Response result = await _authenticateService.Register(model);
+            
+            if (result.Status == "Error")
+            {
+                return Unauthorized(result.Message);
+            }
+            else
+            {
+                return Ok();
+            }
+        }
+
+
         //[HttpPost]
         //[Route("register")]
         //public async Task<IActionResult> Register([FromBody] RegisterModel model)
@@ -69,13 +86,6 @@ namespace AmdarisInternship.API.Controllers
         //        return StatusCode(StatusCodes.Status500InternalServerError, new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." });
 
         //    return Ok(new Response { Status = "Success", Message = "User created successfully!" });
-        //}
-
-        //[HttpPost]
-        //[Route("register-admin")]
-        //public async Task<IActionResult> RegisterAdmin([FromBody] RegisterModel model)
-        //{
-            
         //}
     }
 }

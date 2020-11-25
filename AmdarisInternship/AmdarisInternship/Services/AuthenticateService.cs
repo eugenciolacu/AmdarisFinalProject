@@ -1,8 +1,8 @@
 ﻿using AmdarisInternship.API.Services.Interfaces;
+using AmdarisInternship.Domain.Entities;
 using AmdarisInternship.Domain.Entities.Authentication;
-using Microsoft.AspNetCore.Http;
+using AmdarisInternship.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -20,11 +20,14 @@ namespace AmdarisInternship.API.Services
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IConfiguration _configuration;
 
-        public AuthenticateService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration)
+        private readonly IRepository<User> _userRepository;
+
+        public AuthenticateService(UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IConfiguration configuration, IRepository<User> userRepository)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _configuration = configuration;
+            _userRepository = userRepository;
         }
 
         public async Task<JwtSecurityToken> Login(LoginModel model)
@@ -72,13 +75,13 @@ namespace AmdarisInternship.API.Services
                 return await Task.FromResult(response);
             }
 
-            ApplicationUser user = new ApplicationUser()
+            ApplicationUser applicationUser = new ApplicationUser()
             {
                 Email = model.Email,
                 SecurityStamp = Guid.NewGuid().ToString(),
                 UserName = model.Username
             };
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(applicationUser, model.Password);
             if (!result.Succeeded)
             {
                 response = new Response { Status = "Error", Message = "User creation failed! Please check user details and try again." };
@@ -87,8 +90,26 @@ namespace AmdarisInternship.API.Services
 
             if (await _roleManager.RoleExistsAsync(model.UserRole))
             {
-                await _userManager.AddToRoleAsync(user, model.UserRole);
+                await _userManager.AddToRoleAsync(applicationUser, model.UserRole);
             }
+
+            string id = _userManager.FindByEmailAsync(model.Email).Result.Id;
+
+            User user = new User()
+            {
+                IidentityId = id,
+                FirstName = model.FirstName,
+                LastName = model.LastName,
+                Email = model.Email,
+                Skype = model.Skype,
+                AvatarExtension = model.AvatarExtension,
+                AvatarName = model.AvatarName,
+                Avatar = model.Avatar,
+                MentroId = model.MentroId
+            };
+
+            _userRepository.Add(user);
+            _userRepository.Save();
 
             return await Task.FromResult(new Response { Status = "Success", Message = "User created successfully!" });
         }
