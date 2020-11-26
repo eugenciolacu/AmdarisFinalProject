@@ -35,18 +35,21 @@ namespace AmdarisInternship.API
                     await userManager.AddToRoleAsync(applicationUser, UserRoles.Administrator);
                 }
 
-                //if (!context.Users_.Any(x => x.FirstName == "Administrator"))
-                //{
-                //    var user = new User()
-                //    {
-                //        FirstName = "Administrator",
-                //        LastName = "Administrator",
-                //        Email = applicationUser.Email,
-                //    };
+                if (!context.Users_.Any(x => x.FirstName == UserRoles.Administrator))
+                {
+                    string id = userManager.FindByNameAsync(applicationUser.UserName).Result.Id;
 
-                //    context.Users_.Add(user);
-                //    context.SaveChanges();
-                //}
+                    var user = new User()
+                    {
+                        IidentityId = id,
+                        FirstName = "Administrator",
+                        LastName = "Administrator",
+                        Email = applicationUser.Email,
+                    };
+
+                    context.Users_.Add(user);
+                    context.SaveChanges();
+                }
 
                 //var testIntern = new ApplicationUser()
                 //{
